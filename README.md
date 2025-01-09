@@ -37,11 +37,11 @@ classDiagram
     }
 
     %% Relationships %%
-    ClientApp --> Server : "Communicates via WebSocket"
-    Server --> Database : "Stores and retrieves data"
-    Server --> Room : "Manages room creation and participant interactions"
-    Room --> User : "Has participants"
+    ClientApp --> Server : Communicates via WebSocket
+    Server --> Database : Stores and retrieves data
+    Server --> Room : Manages room creation and participant interactions
+    Room --> User : Has participants
 
     %% Highlight interaction between two users %%
-    User "1" --|> Room : "Joins/Leaves"
-    Room ..> User "2" : "Relay of audio/video"
+    User --> Room : Joins/Leaves
+    Room ..> User : Relays audio/video

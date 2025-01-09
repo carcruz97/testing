@@ -1,50 +1,47 @@
-graph TD
-    subgraph Frontend
-        A[Public Portal] --> B[Search & Playback]
-        A --> C[Download Content]
-        D[Admin Dashboard] --> E[Upload Videos]
-        D --> F[Manage Transcripts]
-        G[Superadmin Dashboard] --> H[User Management]
-        G --> I[System Logs]
-        J[Billing Pages] --> K[Subscription Payment]
-    end
+```mermaid
+classDiagram
+    class ClientApp {
+        +connectToServer()
+        +sendAudioVideo()
+        +receiveAudioVideo()
+        +joinRoom(roomId: String)
+        +leaveRoom()
+    }
 
-    subgraph Backend
-        L[API Gateway] --> M[Authentication]
-        L --> N[Video Processing Workflow]
-        N --> O[Queue Management]
-        L --> P[Billing API Integration]
-    end
+    class Server {
+        +manageRooms()
+        +handleConnections()
+        +relayAudioVideo()
+        +authenticateUser()
+        +disconnectUser()
+    }
 
-    subgraph AI Processing
-        Q[Video Upload] --> R[Transcription]
-        R --> S[Speaker Tagging]
-        S --> T[Topic Segmentation]
-        T --> U[Summarization]
-    end
+    class Database {
+        +storeUserDetails()
+        +storeRoomDetails()
+        +storeMessageHistory()
+    }
 
-    subgraph Database and Storage
-        V[Storage] --> W[Video Files]
-        V --> X[Processed Outputs]
-        Y[Database] --> Z[Metadata]
-        Y --> AA[Transcripts]
-        Y --> AB[User Accounts]
-        Y --> AC[Subscription Status]
-    end
+    class Room {
+        +roomId: String
+        +participants: List<User>
+        +addParticipant(user: User)
+        +removeParticipant(user: User)
+    }
 
-    subgraph Billing System
-        AD[Subscription Management] --> AE[Enforce Access]
-        AD --> AF[Invoice Generation]
-        AG[Payment Processing] --> AH[Sync Billing Data]
-    end
+    class User {
+        +userId: String
+        +username: String
+        +connect()
+        +disconnect()
+    }
 
-    A --> L
-    D --> L
-    G --> L
-    J --> P
-    N --> Q
-    R --> Y
-    S --> Y
-    V --> Q
-    AD --> AB
-    AG --> AC
+    %% Relationships %%
+    ClientApp --> Server : "Communicates via WebSocket"
+    Server --> Database : "Stores and retrieves data"
+    Server --> Room : "Manages room creation and participant interactions"
+    Room --> User : "Has participants"
+
+    %% Highlight interaction between two users %%
+    User "1" --|> Room : "Joins/Leaves"
+    Room ..> User "2" : "Relay of audio/video"
